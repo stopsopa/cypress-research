@@ -1,28 +1,28 @@
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Document</title>
-    </head>
-    <body>
-        <h1>Hello Cypress</h1>
-        <a href="">v002 <span></span></a>
-        <br>
-        <input type="text" />
-        <script>
-            var input   = document.querySelector('input');
-            var span    = document.querySelector('span');
-            var a       = document.querySelector('a');
-            function update() {
-              var url = location.origin + location.pathname + "?url=" + input.value;
-              span.innerHTML = url;
-              a.setAttribute('href', url);
-            }
-            update();
-            input.addEventListener('input', update)
-        </script>
-    </body>
-    </html>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello Cypress</h1>
+    <a href="">v002 <span></span></a>
+    <br />
+    <input type="text" />
+    <script>
+        var input   = document.querySelector('input');
+        var span    = document.querySelector('span');
+        var a       = document.querySelector('a');
+        function update() {
+          var url = location.origin + location.pathname + "?url=" + input.value;
+          span.innerHTML = url;
+          a.setAttribute('href', url);
+        }
+        update();
+        input.addEventListener('input', update)
+    </script>
+</body>
+</html>
