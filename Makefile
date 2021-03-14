@@ -1,2 +1,2 @@
 server:
-	node server.js --dir public
+	node server.js --dir docs
