@@ -9,5 +9,33 @@
 </head>
 <body>
     <h1>Hello Cypress</h1>
+    <a href="">Navigate <span></span></a>
+    <br>
+    <input type="text" />
+    <script>
+
+        var log=(function(){try{return console.log}catch(e){return function (){}}}());
+
+        var input   = document.querySelector('input');
+        var span    = document.querySelector('span');
+        var a       = document.querySelector('a');
+
+        function update() {
+
+          var url = location.origin + location.pathname + "?url=" + input.value;
+
+          span.innerHTML = url;
+
+          a.setAttribute('href', url)
+        }
+        update();
+
+        input.addEventListener('input', function (e) {
+
+          update();
+          // a.setAttribute();
+        })
+
+    </script>
 </body>
 </html>
