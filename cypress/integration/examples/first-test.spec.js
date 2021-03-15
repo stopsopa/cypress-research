@@ -1,8 +1,5 @@
 /// <reference types="cypress" />
 
-// const url = 'http://localhost:8080'
-const url = 'https://stopsopa.github.io/cypress-research'
-
 context('First tests', () => {
 
   // beforeEach(() => {
@@ -11,7 +8,7 @@ context('First tests', () => {
 
   it('Hello Cypress', () => {
 
-    cy.visit(`${url}/index.html`)
+    cy.visit(`/index.html`)
 
     cy.contains('Hello Cypress')
 
