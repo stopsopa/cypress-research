@@ -138,8 +138,14 @@ fi
 ##
 ##
 
+function cleanup {
 
+    echo "cleanup"
 
+    chmod -R a+w cypress
+}
+
+trap cleanup EXIT
 
 
 set -e
