@@ -51,18 +51,18 @@ while (( "$#" )); do
   case "$1" in
     --) # end argument parsing
       shift;
-      while (( "$#" )); do          # optional
-        if [ "$1" = "&&" ]; then
-          REST="$REST \&\&"
-        else
-          if [ "$REST" = "" ]; then
-            REST="\"$1\""
-          else
-            REST="$REST \"$1\""
-          fi
-        fi
-        shift;                      # optional
-      done                          # optional if you need to pass: /bin/bash $0 -f -c -- -f "multi string arg"
+#      while (( "$#" )); do          # optional
+#        if [ "$1" = "&&" ]; then
+#          REST="$REST \&\&"
+#        else
+#          if [ "$REST" = "" ]; then
+#            REST="\"$1\""
+#          else
+#            REST="$REST \"$1\""
+#          fi
+#        fi
+#        shift;                      # optional
+#      done                          # optional if you need to pass: /bin/bash $0 -f -c -- -f "multi string arg"
       break;
       ;;
     -*|--*=) # unsupported flags
@@ -95,6 +95,12 @@ trim() {
 
 PARAMS="$(trim "$PARAMS")"
 
+FINAL="$@"
+if [ "$FINAL" = "" ]; then
+
+  FINAL="cypress run"
+fi
+
 #eval set -- "$PARAMS"
 
 #echo "\$PARAMS=$PARAMS"
@@ -102,32 +108,27 @@ PARAMS="$(trim "$PARAMS")"
 #echo "\$REST=$REST"
 #
 #echo "\$@=$@"
-###
+#
+#echo "\$FINAL=$FINAL"
+#
+##
 #exit 0
 ##
 ##
-#set -e
 
 
 
 
 
+set -e
+#set -x
 
 if [ "$_DOCKER" = "1" ]; then
 
-  echo -e "\n    docker run -it -v \"$(pwd):/e2e\" -w /e2e --env-file \"$_ENVFILE\" cypress/included:6.6.0 $REST\n"
+  echo -e "\n    docker run -it -v \"$(pwd):/e2e\" -w /e2e --env-file \"$_ENVFILE\" --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
 
-  docker run -it -v "$(pwd):/e2e" -w /e2e --env-file "$_ENVFILE" cypress/included:6.6.0 $REST
-
-#  echo -e "\n    docker run -it -v \"$(pwd):/e2e\" -w /e2e --env-file \"$_ENVFILE\" --entrypoint \"$@\" cypress/included:6.6.0\n"
-#
-#  docker run -it -v "$(pwd):/e2e" -w /e2e --env-file "$_ENVFILE" --entrypoint "$@" cypress/included:6.6.0
-
-#  this works
-#  docker run -it -v "/root/____cypress_do_wywalenia:/e2e" -w /e2e --env-file ".env.gh" --entrypoint="" cypress/included:6.6.0 ls -la
-
+                 docker run -it -v "$(pwd):/e2e"   -w /e2e --env-file "$_ENVFILE"   --entrypoint=""   cypress/included:6.6.0 $FINAL
 else
-  #set -x
 
   eval "$(/bin/bash bash/exportsource.sh "$_ENVFILE")"
 
