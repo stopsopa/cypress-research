@@ -5,3 +5,6 @@ steps:
     key         : test
     commands:
       - /bin/bash .buildkite/test.sh
+
+    agents:
+      machine: buildkite
