@@ -1,0 +1,12 @@
+
+# https://buildkite.com/docs/agent/v3/hooks#types-of-hooks-plugin-hooks
+
+set -eo pipefail # https://buildkite.com/docs/pipelines/writing-build-scripts#configuring-bash
+
+# set -x # uncomment for debugging
+
+_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )"
+
+source "$_DIR/_colours.sh"
+
+source "$_DIR/post-command.sh" $@
