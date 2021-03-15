@@ -1,14 +1,15 @@
 # Some code changes, such as editing a Readme, may not require a Buildkite build. If you want Buildkite to ignore a commit, add [ci skip] or [skip ci] anywhere in the commit message.
 
 steps:
-  - label: writeaccess
-    commands:
-      - /bin/bash ../cypress-clean/run_as_root.sh
-
-    agents:
-      queue: machine-buildkite
-
-  - wait
+#  - label: writeaccess
+#    commands:
+#      - /bin/bash ../cypress-clean/run_as_root.sh
+#
+#    agents:
+#      queue: machine-buildkite
+#    WARNING ADD THIS STEP TO PIPELINE CONFIGURATION
+#
+#  - wait
 
   - label: test
     key: test
