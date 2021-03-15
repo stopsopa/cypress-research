@@ -6,5 +6,5 @@ steps:
     commands:
       - /bin/bash .buildkite/test.sh
 
-    agents:
-      queue: machinebuildkite
+#    agents:
+#      queue: machinebuildkite
