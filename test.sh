@@ -14,6 +14,28 @@ if [ "$1" = "" ]; then
 
   ls .env*
 
+
+
+cat << EOF
+
+More help:
+
+# local dev
+/bin/bash test.sh .env.gh
+
+# CI/CD environment
+/bin/bash test.sh .env.gh docker -- /bin/bash test.sh .env.gh
+  # run tests using test.sh inside container - to properly read given .env file inside
+
+just provide .env file with CYPRESS_BASE_URL like:
+  CYPRESS_BASE_URL=https://stopsopa.github.io/cypress-research
+
+# other useful
+/bin/bash $0 .env.gh docker -- /bin/bash
+/bin/bash $0 .env.gh docker -- ls -la
+
+EOF
+
   exit 1
 fi
 
@@ -125,9 +147,13 @@ set -e
 
 if [ "$_DOCKER" = "1" ]; then
 
-  echo -e "\n    docker run -it -v \"$(pwd):/e2e\" -w /e2e --env-file \"$_ENVFILE\" --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
+  echo -e "\n    docker run -it -v \"$(pwd):/e2e\" -w /e2e --env __DOCKER=true --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
 
-                 docker run -it -v "$(pwd):/e2e"   -w /e2e --env-file "$_ENVFILE"   --entrypoint=""   cypress/included:6.6.0 $FINAL
+                 docker run -it -v "$(pwd):/e2e"   -w /e2e --env __DOCKER=true --entrypoint=""   cypress/included:6.6.0 $FINAL
+
+#  echo -e "\n    docker run -it -v \"$(pwd):/e2e\" -w /e2e --env-file \"$_ENVFILE\" --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
+#
+#                 docker run -it -v "$(pwd):/e2e"   -w /e2e --env-file "$_ENVFILE"   --entrypoint=""   cypress/included:6.6.0 $FINAL
 else
 
   eval "$(/bin/bash bash/exportsource.sh "$_ENVFILE")"
@@ -136,6 +162,12 @@ else
 
   #echo "$CYPRESS_BASE_URL"
 
-  node_modules/.bin/cypress open
+  if [ "$__DOCKER" = "true" ]; then
+
+    cypress run
+  else
+
+    node_modules/.bin/cypress open
+  fi
 
 fi
