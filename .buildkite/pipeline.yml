@@ -3,7 +3,7 @@
 steps:
   - label: writeaccess
     commands:
-      - /bin/bash ../cypress-clean/run_as_root_cycle.sh
+      - /bin/bash ../cypress-clean/run_as_root.sh
 
     agents:
       queue: machine-buildkite
