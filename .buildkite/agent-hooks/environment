@@ -11,4 +11,12 @@
 # Note that as the script is sourced not run directly, the shebang line will be ignored
 # See https://buildkite.com/docs/agent/v3/hooks#creating-hook-scripts
 
-/bin/bash post-command
+exec 3<> /dev/null
+function magenta {
+    printf "\e[35m$1\e[0m\n"
+}
+{ magenta "agent environment"; } 2>&3
+
+__DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )"
+
+/bin/bash "$__DIR/pre-command" env

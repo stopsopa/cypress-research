@@ -5,17 +5,29 @@
 # Note that as the script is sourced not run directly, the shebang line will be ignored
 # See https://buildkite.com/docs/agent/v3/hooks#creating-hook-scripts
 
+if [ "$1" = "" ]; then
+
+  exec 3<> /dev/null
+  function magenta {
+      printf "\e[35m$1\e[0m\n"
+  }
+  { magenta "agent pre-command"; } 2>&3
+fi
+
 set -e
 set -x
-cd /var/lib/buildkite-agent/builds/machine-buildkite/ses/root-trigger
+
+(
+  cd /var/lib/buildkite-agent/builds/machine-buildkite/ses/root-trigger
 
 cat <<EOF > watch/exec.sh
 chmod -R a+w /var/lib/buildkite-agent/builds/machine-buildkite/ses/cypress/cypress
 EOF
 
-sleep 1
+  sleep 1
 
-date +"%Y-%m-%d %H:%M:%S"
+  date +"%Y-%m-%d %H:%M:%S"
 
-cat root-trigger.log | tail -n 10
+  cat root-trigger.log | tail -n 10
+)
 
