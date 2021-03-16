@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# The `pre-command` hook will run just before your build command runs
+
+# Note that as the script is sourced not run directly, the shebang line will be ignored
+# See https://buildkite.com/docs/agent/v3/hooks#creating-hook-scripts
+
+set -e
+set -x
+cd /var/lib/buildkite-agent/builds/machine-buildkite/ses/root-trigger
+
+cat <<EOF > watch/exec.sh
+chmod -R a+w /var/lib/buildkite-agent/builds/machine-buildkite/ses/cypress/cypress
+EOF
+
+sleep 1
+
+date +"%Y-%m-%d %H:%M:%S"
+
+cat root-trigger.log | tail -n 10
+
