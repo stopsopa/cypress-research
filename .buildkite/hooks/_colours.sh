@@ -13,7 +13,7 @@ function yellow {
 }
 
 function magenta {
-    printf "\e[35m$1\e[0m\n"
+    printf "+++ \e[35m$1\e[0m\n"
 }
 
 # source "$DIR/../colours.sh"
