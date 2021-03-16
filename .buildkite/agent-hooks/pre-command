@@ -11,7 +11,7 @@ if [ "$1" = "" ]; then
   function magenta {
       printf "\e[35m$1\e[0m\n"
   }
-  { magenta "agent pre-command"; } 2>&3
+  { magenta "+++ agent pre-command"; } 2>&3
 fi
 
 set -e

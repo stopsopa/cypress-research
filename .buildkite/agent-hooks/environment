@@ -15,7 +15,7 @@ exec 3<> /dev/null
 function magenta {
     printf "\e[35m$1\e[0m\n"
 }
-{ magenta "agent environment"; } 2>&3
+{ magenta "+++ agent environment"; } 2>&3
 
 __DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )"
 
