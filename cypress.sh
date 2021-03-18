@@ -1,5 +1,7 @@
 
-if [ ! -f "cypress.json" ]; then
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )"
+
+if [ ! -f "$DIR/cypress.json" ]; then
 
   echo "You should run this command from directory with cypress.json file in it"
 
@@ -21,11 +23,11 @@ cat << EOF
 More help:
 
 # local dev
-/bin/bash test.sh .env.gh
+/bin/bash $0 .env.gh
 
 # CI/CD environment
-/bin/bash test.sh .env.gh docker -- /bin/bash test.sh .env.gh
-  # run tests using test.sh inside container - to properly read given .env file inside
+/bin/bash $0 .env.gh docker -- /bin/bash $0 .env.gh
+  # run tests using $0 inside container - to properly read given .env file inside
 
 just provide .env file with CYPRESS_BASE_URL like:
   CYPRESS_BASE_URL=https://stopsopa.github.io/cypress-research
@@ -41,7 +43,7 @@ fi
 
 if [ ! -f "$1" ]; then
 
-  echo "'$1' is not a file"
+  echo "env file '$1' is not a file"
 
   exit 1
 fi
@@ -153,16 +155,16 @@ set -e
 
 if [ "$_DOCKER" = "1" ]; then
 
-  echo -e "\n    docker run -it -v \"$(pwd):/e2e\" -w /e2e --env __DOCKER=true --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
+  echo -e "\n    docker run -it -v \"$DIR:/e2e\" -w /e2e --env __DOCKER=true --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
 
-                 docker run -it -v "$(pwd):/e2e"   -w /e2e --env __DOCKER=true --entrypoint=""   cypress/included:6.6.0 $FINAL
+                 docker run -it -v "$DIR:/e2e"   -w /e2e --env __DOCKER=true --entrypoint=""   cypress/included:6.6.0 $FINAL
 
-#  echo -e "\n    docker run -it -v \"$(pwd):/e2e\" -w /e2e --env-file \"$_ENVFILE\" --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
+#  echo -e "\n    docker run -it -v \"$DIR:/e2e\" -w /e2e --env-file \"$_ENVFILE\" --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
 #
-#                 docker run -it -v "$(pwd):/e2e"   -w /e2e --env-file "$_ENVFILE"   --entrypoint=""   cypress/included:6.6.0 $FINAL
+#                 docker run -it -v "$DIR:/e2e"   -w /e2e --env-file "$_ENVFILE"   --entrypoint=""   cypress/included:6.6.0 $FINAL
 else
 
-  eval "$(/bin/bash bash/exportsource.sh "$_ENVFILE")"
+  eval "$(/bin/bash "$DIR/bash/exportsource.sh" "$_ENVFILE")"
 
   # https://docs.cypress.io/guides/guides/environment-variables.html
 
@@ -173,7 +175,7 @@ else
     cypress run
   else
 
-    node_modules/.bin/cypress open
+    "$DIR/node_modules/.bin/cypress" open
   fi
 
 fi

@@ -5,5 +5,5 @@ set -o pipefail # more: https://buildkite.com/docs/pipelines/writing-build-scrip
 
 echo "+++ run cypress in docker"
 
-/bin/bash test.sh .env.gh docker -- /bin/bash test.sh .env.gh
+/bin/bash cypress.sh .env.gh docker -- /bin/bash test.sh .env.gh
 
