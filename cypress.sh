@@ -16,8 +16,6 @@ if [ "$1" = "" ]; then
 
   ls .env*
 
-
-
 cat << EOF
 
 More help:
@@ -155,9 +153,35 @@ set -e
 
 if [ "$_DOCKER" = "1" ]; then
 
-  echo -e "\n    docker run -it -v \"$DIR:/e2e\" -w /e2e --env __DOCKER=true --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
+  set -x
 
-                 docker run -it -v "$DIR:/e2e"   -w /e2e --env __DOCKER=true --entrypoint=""   cypress/included:6.6.0 $FINAL
+  VER="$(node bash/node/json/get.js package.json devDependencies.cypress)"
+
+  if [ "$?" != "0" ]; then
+
+    echo "$0 error: node bash/node/json/get.js package.json devDependencies.cypress returned non 0 exit code"
+
+    exit 1
+  fi
+
+  if [ "$VER" = "undefined" ]; then
+
+    VER="$(node bash/node/json/get.js package.json dependencies.cypress)"
+  fi
+
+  if [ "$VER" = "undefined" ]; then
+
+    echo "$0 error: couldn't extract VER"
+
+    exit 1
+  fi
+
+  # console.log('^6.8.0'.replace(/^[^\d]*(.*)$/, '$1'))
+  VER="$(echo "console.log('$VER'.replace(/^[^\d]*(.*)\$/, '\$1'))" | node)"
+
+  echo -e "\n    docker run -it -v \"$DIR:/e2e\" -w /e2e --env __DOCKER=true --entrypoint=\"\" cypress/included:$VER $FINAL\n"
+
+                 docker run -it -v "$DIR:/e2e"   -w /e2e --env __DOCKER=true --entrypoint=""   cypress/included:$VER $FINAL
 
 #  echo -e "\n    docker run -it -v \"$DIR:/e2e\" -w /e2e --env-file \"$_ENVFILE\" --entrypoint=\"\" cypress/included:6.6.0 $FINAL\n"
 #
@@ -165,6 +189,49 @@ if [ "$_DOCKER" = "1" ]; then
 else
 
   eval "$(/bin/bash "$DIR/bash/exportsource.sh" "$_ENVFILE")"
+
+  REG="^https?://"
+
+  if [[ ! $CYPRESS_BASE_URL =~ $REG ]]; then
+
+    echo "CYPRESS_BASE_URL doesn't match $REG - first test"
+
+    echo "attempt to assemble"
+
+    if [ "$NODE_PORT" = "" ]; then
+
+      echo "NODE_PORT is not defined"
+
+      exit 1
+    fi
+
+    if [ "$NODE_HOST" = "" ]; then
+
+      echo "NODE_HOST is not defined"
+
+      exit 1
+    fi
+
+    if [ "$NODE_PROTOCOL" = "" ]; then
+
+      echo "NODE_PROTOCOL is not defined"
+
+      exit 1
+    fi
+
+    CYPRESS_BASE_URL="$NODE_PROTOCOL://$NODE_HOST:$NODE_PORT"
+
+    echo "CYPRESS_BASE_URL=$CYPRESS_BASE_URL"
+  fi
+
+  if [[ ! $CYPRESS_BASE_URL =~ $REG ]]; then
+
+    echo "CYPRESS_BASE_URL doesn't match $REG - second test"
+
+    exit 1
+  fi
+
+  export CYPRESS_BASE_URL;
 
   # https://docs.cypress.io/guides/guides/environment-variables.html
 
