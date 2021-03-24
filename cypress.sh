@@ -8,6 +8,24 @@ if [ ! -f "$DIR/cypress.json" ]; then
   exit 1
 fi
 
+if [ ! -f "$DIR/bash/exportsource.sh" ]; then
+
+  echo "$DIR/bash/exportsource.sh doesn't exist"
+
+  exit 1
+fi
+
+if [ ! -f "$DIR/bash/node/json/get.js" ]; then
+
+  echo "$DIR/bash/node/json/get.js doesn't exist"
+
+  exit 1
+fi
+
+function star {
+  echo "$1" | sed -E "s/:star:/*/g"
+}
+
 if [ "$1" = "" ]; then
 
   echo "Specify location to env file as a first argument"
@@ -33,6 +51,18 @@ just provide .env file with CYPRESS_BASE_URL like:
 # other useful
 /bin/bash $0 .env.gh docker -- /bin/bash
 /bin/bash $0 .env.gh docker -- ls -la
+/bin/bash $0 .env.gh docker -- /bin/bash $0 .env.gh -- sypress run --spec cypress/integration/homepage.spec.js
+    # more about cli parameters: https://docs.cypress.io/guides/references/configuration/#Command-Line
+
+/bin/bash $0 .env.gh docker -- /bin/bash $0 .env.gh -- sypress run -C cypress-docker.json
+    # more about json configuration: https://docs.cypress.io/guides/references/configuration
+
+    cypress-docker.json
+    {
+        "video": false,
+        "ignoreTestFiles": "*.spec.js"
+    }
+    # read more: https://docs.cypress.io/guides/references/configuration/#Folders-Files
 
 EOF
 
@@ -58,13 +88,6 @@ if [ "$1" = "docker" ]; then
 
   _DOCKER="1"
 fi
-
-
-
-
-
-
-
 
 PARAMS=""
 REST=""
@@ -179,6 +202,10 @@ if [ "$_DOCKER" = "1" ]; then
   # console.log('^6.8.0'.replace(/^[^\d]*(.*)$/, '$1'))
   VER="$(echo "console.log('$VER'.replace(/^[^\d]*(.*)\$/, '\$1'))" | node)"
 
+  # https://www.cypress.io/blog/2019/05/02/run-cypress-with-a-single-docker-command/#header
+  # https://mtlynch.io/painless-web-app-testing/
+  # https://glebbahmutov.com/blog/run-cypress-included-from-docker-container/
+
   echo -e "\n    docker run -it -v \"$DIR:/e2e\" -w /e2e --env __DOCKER=true --entrypoint=\"\" cypress/included:$VER $FINAL\n"
 
                  docker run -it -v "$DIR:/e2e"   -w /e2e --env __DOCKER=true --entrypoint=""   cypress/included:$VER $FINAL
@@ -239,7 +266,9 @@ else
 
   if [ "$__DOCKER" = "true" ]; then
 
-    cypress run
+    echo ">>>$(star "$FINAL")<<<"
+
+    eval $(star "$FINAL")
   else
 
     "$DIR/node_modules/.bin/cypress" open

@@ -3,18 +3,19 @@
 # WARNING: run as buildkite-agent
 # WARNING: run as buildkite-agent
 # WARNING: run as buildkite-agent
-cd /var/lib/buildkite-agent/builds/machine-buildkite/ses
+
+cd ~ # nice if it will be /home/buildkite-agent
 mkdir -p root-trigger/watch
 cd root-trigger
 
 cat <<EOF > run.sh
-FILE="$1/$2"
+FILE="\$1/\$2"
 
-if [ -f "$FILE" ]; then
+if [ -f "\$FILE" ]; then
 
-  /bin/bash "$FILE"
+  /bin/bash "\$FILE"
 
-  rm -rf "$FILE"
+  rm -rf "\$FILE"
 fi
 EOF
 
@@ -30,8 +31,8 @@ Description=Root runner service
 
 [Service]
 Type=simple
-WorkingDirectory=/var/lib/buildkite-agent/builds/machine-buildkite/ses/root-trigger
-ExecStart=/bin/bash -c "cd /var/lib/buildkite-agent/builds/machine-buildkite/ses/root-trigger; /bin/bash watch_files_in_dir.sh watch run.sh | tee root-trigger.log"
+WorkingDirectory=/home/buildkite-agent/root-trigger
+ExecStart=/bin/bash -c "cd /home/buildkite-agent/root-trigger; /bin/bash watch_files_in_dir.sh watch run.sh | tee root-trigger.log"
 
 [Install]
 WantedBy=multi-user.target
@@ -47,7 +48,7 @@ sudo systemctl status root-trigger
 # test
 # WARNING: run as buildkite-agent
 
-cd /var/lib/buildkite-agent/builds/machine-buildkite/ses/root-trigger
+cd /home/buildkite-agent/root-trigger
 
 cat <<EOF > watch/exec.sh
 echo juhu

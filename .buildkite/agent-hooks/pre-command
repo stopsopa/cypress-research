@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# usually agent hooks directory is in /etc/buildkite-agent/hooks
+
 # The `pre-command` hook will run just before your build command runs
 
 # Note that as the script is sourced not run directly, the shebang line will be ignored
