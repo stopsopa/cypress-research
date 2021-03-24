@@ -1,31 +1,46 @@
 
-echo "------"
-echo "HOME=$HOME"
-echo "------"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )"
 
-export HOME="/home/buildkite-agent"
+ROOT="$DIR/.."
 
-source ~/.bashrc
+source "$ROOT/.buildkite/_prepare.sh" "$ROOT/.env.gh"
 
-echo "------"
-echo "HOME=$HOME"
-echo "------"
-if [ "$HOME" != "/home/buildkite-agent" ]; then
+if [ "$CYPRESS_BASE_URL" = "" ]; then
 
-  echo "HOME is not equal /home/buildkite-agent";
+  echo "CYPRESS_BASE_URL is not defined"
 
   exit 1
 fi
 
-echo "ROOT=$ROOT"
+#TEST_DOMAIN="$(buildkite-agent meta-data get "TEST_DOMAIN")"
+#
+#if [ "$TEST_DOMAIN" = "" ]; then
+#
+#  echo "TEST_DOMAIN is not defined"
+#
+#  exit 1
+#fi
+#
+#printf "\nCYPRESS_BASE_URL=\"https://$(echo $TEST_DOMAIN)\"\n" >> "$ENVFILE"
 
-cd "$ROOT";
+function cleanup {
+  (
+    cd /home/buildkite-agent/root-trigger
 
-set -x          # Expand and print each command before executing
-set -e          # Exit script immediately if any command returns a non-zero exit status.
-set -o pipefail # more: https://buildkite.com/docs/pipelines/writing-build-scripts#configuring-bash
+cat <<EOF > watch/exec.sh
+chmod -R a+w "$ROOT"
+EOF
 
-echo "+++ run cypress in docker"
+    sleep 1
 
-/bin/bash cypress.sh .env.gh docker -- /bin/bash cypress.sh .env.gh -- cypress run -C cypress-docker.json
+    date +"%Y-%m-%d %H:%M:%S"
+
+    cat root-trigger.log | tail -n 10
+  )
+}
+
+trap cleanup EXIT
+
+/bin/bash cypress.sh "$ENVFILEBASENAME" docker -- /bin/bash cypress.sh "$ENVFILEBASENAME" -- cypress run -C cypress-docker.json
+
 
