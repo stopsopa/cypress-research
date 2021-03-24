@@ -29,13 +29,13 @@ source "$ENVFILE"
 
 ENVFILEBASENAME="$(basename "$ENVFILE")"
 
-#if [ "$PROJECT_NAME" = "" ]; then
-#
-#  echo "PROJECT_NAME is not defined";
-#
-#  exit 1
-#fi
-#
+if [ "$PROJECT_NAME" = "" ]; then
+
+  echo "PROJECT_NAME is not defined";
+
+  exit 1
+fi
+
 #if [ "$PROTECTED_KUB_CLUSTER" = "" ]; then
 #
 #  echo "PROTECTED_KUB_CLUSTER is not defined";

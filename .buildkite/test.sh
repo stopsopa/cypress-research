@@ -27,7 +27,7 @@ function cleanup {
   (
     cd /home/buildkite-agent/root-trigger
 
-cat <<EOF > watch/exec.sh
+cat <<EOF > "watch/$PROJECT_NAME.sh"
 chmod -R a+w "$ROOT"
 EOF
 
