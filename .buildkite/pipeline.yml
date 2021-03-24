@@ -17,4 +17,4 @@ steps:
       - /bin/bash .buildkite/test.sh
 
     agents:
-      queue: machine-buildkite
+      queue: machine-registry
