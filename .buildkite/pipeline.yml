@@ -1,9 +1,7 @@
 # Some code changes, such as editing a Readme, may not require a Buildkite build. If you want Buildkite to ignore a commit, add [ci skip] or [skip ci] anywhere in the commit message.
 
 
-agents:
-  queue: machine-registry
-  
+
 steps:
 #  - label: writeaccess
 #    commands:
@@ -19,3 +17,6 @@ steps:
     key: test
     commands:
       - /bin/bash .buildkite/test.sh
+
+    agents:
+      queue: machine-registry
